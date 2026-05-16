@@ -35,25 +35,31 @@ export async function gitCommit(lang: Lang = 'en-us') {
     message: `${value.padEnd(30)} (${msg})`
   }));
 
-  const result = await prompt<PromptObject>([
-    {
-      name: 'types',
-      type: 'select',
-      message: gitCommitMessages.types,
-      choices: typesChoices
-    },
-    {
-      name: 'scopes',
-      type: 'select',
-      message: gitCommitMessages.scopes,
-      choices: scopesChoices
-    },
-    {
-      name: 'description',
-      type: 'text',
-      message: gitCommitMessages.description
-    }
-  ]);
+  let result: PromptObject;
+
+  try {
+    result = await prompt<PromptObject>([
+      {
+        name: 'types',
+        type: 'select',
+        message: gitCommitMessages.types,
+        choices: typesChoices
+      },
+      {
+        name: 'scopes',
+        type: 'select',
+        message: gitCommitMessages.scopes,
+        choices: scopesChoices
+      },
+      {
+        name: 'description',
+        type: 'text',
+        message: gitCommitMessages.description
+      }
+    ]);
+  } catch {
+    process.exit(0);
+  }
 
   const breaking = result.description.startsWith('!') ? '!' : '';
 
